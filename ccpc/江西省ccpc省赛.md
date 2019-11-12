@@ -65,9 +65,9 @@ typedef long long ll;
 
 const ll maxn = 1e5+10;
 
-ll N,sumT1,sumT2,sumT3,H1,H2,mx;
+ll N,sumT1,sumT2,sumT3,H1,H2,mx;//结点总数，树1的结点数，树2的结点数，新树的结点数，树1的重心，树2的重心
 ll fa[maxn];
-ll sz[maxn];
+ll sz[maxn];//sz[i]:以i为根结点的树的结点数
 vector<ll> ve[maxn];
 
 ll find(ll x){
