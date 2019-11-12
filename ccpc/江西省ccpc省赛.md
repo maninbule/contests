@@ -208,6 +208,43 @@ int main(){
     return 0;
 }
 ```
+## F - String
+
+题意：
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+string s;
+int main(){
+	int len;
+	while(scanf("%d",&len)!=EOF){
+		cin>>s;
+		map<char,int> mp;
+		for(const auto &c: s) mp[c]++;
+		ll son = mp['a']*mp['v']*mp['i']*mp['n'];
+		ll mu = len*len*len*len;
+		ll g = __gcd(son,mu);
+		son/=g,mu/=g;
+		printf("%lld/%lld\n",son,mu);
+		
+	}
+	return 0;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
