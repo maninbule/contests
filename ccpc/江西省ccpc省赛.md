@@ -1,7 +1,14 @@
 [江西省ccpc省赛](http://acm.hdu.edu.cn/search.php?field=problem&key=2019CCPC-%BD%AD%CE%F7%CA%A1%C8%FC%A3%A8%D6%D8%CF%D6%C8%FC%A3%A9-+%B8%D0%D0%BB%C4%CF%B2%FD%B4%F3%D1%A7&source=1&searchmode=source)
 
+## 题解列表
 [A](#a---cotree) 
-[D](##D---Wave)
+[D](#d---wave)
+[F](#f---string)
+[G](#g---traffic)
+[H](#h---rng)
+[I](#i---budget)
+[J](#j---worker)
+[K](#k---class)
 ## A - Cotree
 
 题意：给你两颗树，要求你在两颗树分别找一个点连成一条边，使得这两颗树连起来的新树结点两两距离之和最小
