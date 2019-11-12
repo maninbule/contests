@@ -144,3 +144,86 @@ int main(){
     return 0;
 }
 ```
+## D - Wave
+
+`题意`：给一个序列，让找一个最大的子序列，这个子序列的奇数位置元素相同，偶数位置相同，奇数位置元素不同于偶数位置元素，输出满足这个条件的最大子序列的长度
+
+`思路`：先用vector记录每种元素出现的下标，然后对两两元素对应的vector求组成的子序列的长度，并更新
+
+### 如何计算两两元素对应的vector求组成的子序列的长度？
+其实就和打牌一样，一方出一张牌，另一方出一张比它大的牌，反复执行这个过程，直到有一方没有牌出就结束，注意：为了形成的序列最大，开始时牌小的先出
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> ve[110];
+int arr[1000010];
+int N,C;
+
+int getlong(int a,int b){
+    int res = 0,len1 = ve[a].size(),len2 = ve[b].size();
+    if(len1 == 0 || len2 == 0) res = 0;
+    else if(ve[a][0] < ve[b][0]){
+        int i = 0,j = 0;
+        res++;
+        while(true){
+            while(j<len2 && ve[b][j]<ve[a][i]) j++;
+            if(j == len2) break;
+            res++;
+            while(i<len1 && ve[a][i]<ve[b][j]) i++;
+            if(i == len1) break;
+            res++;
+        }
+    }else{
+        int i = 0,j = 0;
+        res++;
+        while(true){
+            while(i<len1 && ve[a][i]<ve[b][j]) i++;
+            if(i == len1) break;
+            res++;
+            while(j<len2 && ve[b][j]<ve[a][i]) j++;
+            if(j == len2) break;
+            res++;
+        }
+    }
+    return res>1? res:0;
+}
+int main(){
+    cin>>N>>C;
+    for(int i = 0;i<N;i++) scanf("%d",&arr[i]);
+    for(int i = 0;i<N;i++){
+        ve[arr[i]].push_back(i);
+    }
+    int res = 0;
+    for(int i = 1;i<=C;i++){
+        for(int j = i+1;j<=C;j++){
+            int lent = getlong(i,j);
+            res = max(res,lent);
+        }
+    }
+    cout<<res<<endl;
+
+    return 0;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
