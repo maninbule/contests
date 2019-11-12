@@ -210,7 +210,7 @@ int main(){
 ```
 ## F - String
 
-题意：
+题意：给一个字符串，在字符串中任意挑一个字母（循环4次），求挑出来的字母能组成`avin`的概率是多大，将概率分数约分后输出
 ```cpp
 #include <bits/stdc++.h>
 using namespace std;
@@ -233,8 +233,178 @@ int main(){
 	return 0;
 }
 ```
+## G - Traffic
+
+题意：在一个十字路口，有东西方向行驶的车，有南北方向行驶的车，为了不相撞，让南北方向行驶的车都等待相同的时间，求这个时间的最小值
+
+分析：将问题转换成，有两个数组，把一个数组都统一加一个值，使得两个数组没有交集，所以枚举等待时间，直接暴力即可
+
+```cpp
+#include <bits/stdc++.h>
+#include <sstream>
+using namespace std;
+typedef long long ll;
+
+int arr1[1100],arr2[1100],arr3[2200],N1,N2;
+map<int,int> mp;
 
 
+int main(){
+	int N1,N2;
+	while(scanf("%d%d",&N1,&N2)!=EOF){
+		int mx =0 ,mi = 0;
+		for(int i = 0;i<N1;i++) scanf("%d",&arr1[i]),mx = max(mx,arr1[i]);
+		for(int i = 0;i<N2;i++) scanf("%d",&arr2[i]),mi = min(mi,arr2[i]);
+		
+		mp.clear();
+		for(int i = 0;i<N1;i++) mp[arr1[i]]++;
+		for(int i = 0;i<= mx-mi+1;i++){
+			int ok = true;
+			for(int j = 0;j<N2;j++){
+				if(mp[arr2[j]+i]!=0){
+					ok = false;
+					break;
+				}
+			}
+			if(ok){
+				cout<<i<<endl;
+				break;
+			}
+		}
+	}
+	
+	
+	return 0;
+}
+```
+## H - Rng
+
+题意: 给一个区间[1,n],分别两次在[1,n] 选两个子区间[l,r]，求两个子区间不相交的概率
+
+分析：可以将问题转换成`1 - 两个子区间不相交的概率`。对于两个区间，左边的区间为[l1,r1],右边的区间为[l2,r2],只要满足r1<l2,两个子区间就是不相交的。
+所以只要枚举r1<l2的所有情况数，然后除以r1，l2任意选择情况数就是两个子区间不相交的概率
+
+因为运算要进行取模，所以除法要变成乘以其逆元，求逆元可以用费马小定理，a的逆元为a^(mod-2)
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+typedef long long ll;
+
+const ll mod = 1000000007;
+ll N;
+ll ksm(ll a,ll b){
+    ll res = 1;
+    while(b){
+        if(b%2) res = res*a%mod;
+        b/=2;
+        a = a*a%mod;
+    }
+    return res;
+}
+
+int main(){
+
+    cin>>N;
+    ll res = (N+1)*ksm(2*N,mod-2)%mod;
+    cout<<res<<endl;
+    return 0;
+}
+```
+## I - Budget
+
+题意：现在银行要将小数点保留3位改成保留2位，求修改之后的总值的变化值
+
+分析：按字符串读入，只需要判断最后一位，如果它小于'5',就会舍去，否则就多加上'10'-'5'
+
+```cpp
+#include <bits/stdc++.h>
+#include <sstream>
+using namespace std;
+typedef long long ll;
+
+
+int main(){
+
+	int N;
+	while(scanf("%d",&N)!=EOF){
+		double ans = 0;string s;
+		while(N--){
+			cin>>s;
+			int t = s[s.size()-1]-'0';
+			if(t<5) ans -= t;
+			else ans += (10-t);
+		}
+		ans /= 1000;
+		printf("%.3f\n",ans);
+	}	
+	return 0;
+}
+```
+
+## J - Worker
+
+题意：一个车间一个人产x个零件，有n个车间，m个人，每个车间都分配一定的人数，人数需要分配完，并且使得每个车间产的零件数一样多
+
+分析：假如A车间一人产1个零件，B车间一人产3个零件，如果要让两个车间产量一样，那么必须A车间分配的人数是B车间的3*k倍。所以只需要求所有车间一人产量的最小公倍数p，只要m是p的倍数就可以实现每个车间的产量一样多
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+ll N,M;
+ll W[1100];
+
+ll lcm(ll a,ll b){
+	return (a*b)/(__gcd(a,b));
+}
+int main(){
+	
+	while(scanf("%lld%lld",&N,&M)!=EOF){
+		for(int i = 0;i<N;i++) scanf("%lld",&W[i]);
+		ll L = W[0],sum = 0;
+		for(int i = 0;i<N;i++){
+			L = lcm(L,W[i]);
+		}
+		for(int i = 0;i<N;i++){
+			sum += L/W[i];
+		}
+		if(M%sum!=0) cout<<"No"<<endl;
+		else{
+			cout<<"Yes"<<endl;
+			ll t = M/sum;
+			for(int i = 0;i<N;i++){
+				printf("%lld",L/W[i]*t);
+				if(i<N-1) putchar(' ');
+			}
+			cout<<endl;
+		}
+	}
+	
+	return 0;
+}
+```
+
+## K - Class
+
+题意：解方程
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+
+ll x,y;
+int main(){
+	cin>>x>>y;
+	ll a = (x+y)/2,b = (x-y)/2;
+	cout<<a*b<<endl;
+	return 0;
+}
+```
 
 
 
