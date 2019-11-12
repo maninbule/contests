@@ -39,4 +39,106 @@ void DFS_find(ll u,ll sum,ll &h,ll fa = -1){
 }
 ```
 ### 怎么计算一个树两两结点距离之和？
-对于一条边，每一个左边的结点都需要和右边的一个结点相连形成一条路，所以这条边经过
+对于一条边，每一个左边的结点都需要和右边的一个结点相连形成一条路，所以这条边经过的次数是`左边结点数*右边结点数`
+只要遍历完每一条边就进行累加即可
+```cpp
+ll DFS_dis(ll u,ll fa = -1){
+    ll sum = 0;
+    for(ll i = 0;i<ve[u].size();i++){
+        ll v = ve[u][i];
+        if(v == fa) continue;
+        sum += sz[v]*(sumT3-sz[v]);
+        sum += DFS_dis(v,u);
+    }
+    return sum;
+}
+```
+
+完整代码：
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+typedef long long ll;
+
+const ll maxn = 1e5+10;
+
+ll N,sumT1,sumT2,sumT3,H1,H2,mx;
+ll fa[maxn];
+ll sz[maxn];
+vector<ll> ve[maxn];
+
+ll find(ll x){
+    return x == fa[x]? x:fa[x] = find(fa[x]);
+}
+void join(ll x,ll y){
+    ll fx = find(x),fy = find(y);
+    if(fx != fy) fa[fx] = fy;
+}
+
+ll DFS_coun(ll u,ll fa = -1){
+    ll sum = 1;
+    for(ll i = 0;i<ve[u].size();i++){
+        if(ve[u][i] == fa) continue;
+        sum += DFS_coun(ve[u][i],u);
+    }
+    return sz[u] = sum;
+}
+
+void DFS_find(ll u,ll sum,ll &h,ll fa = -1){
+    ll m = max(sum-sz[u],0LL);
+    for(ll i = 0;i<ve[u].size();i++)
+        if(ve[u][i]!=fa) m = max(m,sz[ve[u][i]]);
+    if(m<mx) h = u,mx = m;
+    for(ll i = 0;i<ve[u].size();i++){
+        int v = ve[u][i];
+        if(v != fa) DFS_find(v,sum,h,u);
+    }
+}
+
+ll DFS_dis(ll u,ll fa = -1){
+    ll sum = 0;
+    for(ll i = 0;i<ve[u].size();i++){
+        ll v = ve[u][i];
+        if(v == fa) continue;
+        sum += sz[v]*(sumT3-sz[v]);
+        sum += DFS_dis(v,u);
+    }
+    return sum;
+}
+
+int main(){
+    cin>>N;
+    for(ll i = 1;i<=N;i++) fa[i] = i;
+    ll a,b;
+    for(ll i = 1;i<=N-2;i++){
+        scanf("%lld%lld",&a,&b);
+        ve[a].push_back(b);
+        ve[b].push_back(a);
+        join(a,b);
+    }
+    ll root1 = -1,root2 = -1;
+    for(ll i = 1;i<=N;i++) find(i);
+    for(ll i  = 1;i<=N;i++){
+        if(fa[i] == i){
+            if(root1 == -1) root1 = i;
+            else root2 = i;
+        }
+    }
+    sumT1 = DFS_coun(root1);
+    sumT2 = DFS_coun(root2);
+    H1 = root1,H2 = root2;
+    sumT3 = sumT1+sumT2;
+    mx = 0x3f3f3f3f;
+    DFS_find(root1,sumT1,H1);
+    mx = 0x3f3f3f3f;
+    DFS_find(root2,sumT2,H2);
+    ve[H1].push_back(H2);
+    ve[H2].push_back(H1);
+
+    DFS_coun(H1);
+    ll res = DFS_dis(H1);
+    cout<<res<<endl;
+    return 0;
+}
+```
